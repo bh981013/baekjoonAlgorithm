@@ -1,14 +1,17 @@
+#정답
+
 import sys
-#input = sys.stdin.readline
+input = sys.stdin.readline
 sys.setrecursionlimit(1000000)
-sys.stdin = open("input.txt", "r")
+# sys.stdin = open("input.txt", "r")
 
 '''
-downMode 와 upMode로 나뉘어서, 한번 끝나면 계산함.
-prev 와 cur을 비교해서 현재 모드와 대소관계를 비교함. ->틀린 풀이
+최댓값을 중심으로 좌우로 다음을 큰값을 구한다음 물의 양계산. 반복
+
 '''
 arr = []
 H, W = 0,0
+N = 0
 def calc(l, r):
     ret = 0
     h = min(arr[l], arr[r])
@@ -16,38 +19,52 @@ def calc(l, r):
         remain = h - arr[i]
         if(remain > 0):
             ret += remain
-    #print(ret)
     return ret
 
+def calcLeft(r):
+    if(r == 0):
+        return 0
+    ret = 0
+    maxH = 0
+    index = 0
+    for i in range(r):
+        if(maxH < arr[i]):
+             maxH = arr[i]
+             index = i
+    ret += calc(index,r)
+    ret += calcLeft(index)
+    return ret
+
+def calcRight(l):
+    if(l == N-1):
+        return 0
+    ret = 0
+    maxH = 0
+    index = N-1
+    for i in range(N-1, l, -1):
+        if(maxH < arr[i]):
+             maxH = arr[i]
+             index = i
+    ret += calc(l, index)
+    ret += calcRight(index)
+    
+    return ret
+
+
 def main():
-    global arr,H,W
+    global arr,H,W,N
     H, W = map(int, input().split())
     arr = list(map(int, input().split()))
     N = len(arr)
-    prev = arr[0]
-    indexL, indexR = 0,0    #왼쪽과 오른쪽의 범위
-    isDown = -1 #상승/하강 여부 확인
+    highest = 0
+    index = 0
     ret = 0
-    for i in range(1, N):
-        cur = arr[i]
-        if(prev < cur): #올라감
-            if isDown == 1: #내려가는 모드이면
-                isDown = 0 #올라가는 모드로 바꿈
-        elif(prev > cur):   #내려감
-            if isDown == 0: #올라가는 모드이면, 한번의 웅덩이가 생겼기때문에 빗물의 양 계산
-                indexR = prev
-                ret+= calc(indexL, indexR)    #양 index 사이 빗물의 양 계산.
-                indexL = i-1 #다시 indexL을 설정
-                isDown = 1
-            elif isDown == -1:  #초기조건. prev의 index가 indexL이 됨
-                
-                indexL = i-1
-                isDown = 1
-        #print(arr[i], isDown)
-        prev = cur
-    if(isDown == 0):
-        #print("최종", indexL, N-1)
-        ret+=calc(indexL, N-1)
+    for i in range(N):
+        if(highest < arr[i]):
+            highest =arr[i]
+            index = i
+    ret += calcLeft(index)
+    ret += calcRight(index)
     print(ret)
 
 main()
