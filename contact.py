@@ -5,7 +5,7 @@ myinput = sys.stdin.readline
 import time
 import re
 start = 0
-def main():i
+def main():
     T =  int(input())
     signals = []
     output = []
@@ -14,7 +14,7 @@ def main():i
     p = re.compile("(100+1+|01)+")
     for signal in signals:
         m = p.fullmatch(signal)
-        if m!= None and m.span() == (0, len(signal)):
+        if m:
             output.append("YES")
         else: output.append("NO")
         
