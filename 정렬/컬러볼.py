@@ -4,10 +4,12 @@
 전체-색 을통해 누적합을 구함
 
 다른 색 같은 크기일때 이슈!!
+=> 누적합 배열을 생성 후, 다시 누적합을 돌면서 만약 내 직전 공이랑 크기가 같다면, 누적합도 같아야함.
+따라서 누적합을 앞에 누적합으로 바꿈.
 '''
 import sys
-#input = sys.stdin.readline
-sys.stdin = open("input.txt", "r")
+input = sys.stdin.readline
+#sys.stdin = open("input.txt", "r")
 
 def main():
     N = int(input())
@@ -17,7 +19,6 @@ def main():
     perColor = [[] for _ in range(N+1)]
     for num, color, size in arr:
         perColor[color].append([num, size])
-    
     # 크기 기준으로 전체 오름차순 정렬
     arr.sort(key = lambda x: x[2])
 
@@ -25,6 +26,10 @@ def main():
     prefixSum = [arr[0][2]]
     for i in range(1, N):
         prefixSum.append(prefixSum[i-1] + arr[i][2])
+    for i in range(1,N):
+        if arr[i][2] == arr[i-1][2]:
+            prefixSum[i] = prefixSum[i-1]
+
 
     # 크기 기준으로 색깔별 오름차순 정렬
     for colorArr in perColor:
@@ -38,23 +43,30 @@ def main():
         for j in range(1, len(perColor[i])):
             prefixSumPerColor[i].append(prefixSumPerColor[i][j-1] + perColor[i][j][1])
     
+    for i in range(1, N+1):
+        for j in range(1, len(perColor[i])):
+            if perColor[i][j][1] == perColor[i][j-1][1]:
+                prefixSumPerColor[i][j] = prefixSumPerColor[i][j-1]
     # 전체-색별
     answer = [0 for _ in range(N)]
     for i in range(N):
         num, color, size = arr[i]
-        answer[num] += prefixSum[i] - size
+        answer[num] += prefixSum[i] - (size)
     for color in range(1,N+1): 
         for j in range(len(perColor[color])):
             num, size = perColor[color][j]
             answer[num] -= (prefixSumPerColor[color][j]-size)
             #print(f"n:{num}, s:{size}, c:{color}, minus:{(prefixSumPerColor[color][j]-size)}")
     
-    print("arr:\n" + "\n".join(map(str,arr)))
+    # print("arr:\n" + "\n".join(map(str,arr)))
     # print("perColor:\n" + "\n".join(map(str,perColor)))
-    print()
-    print("\n".join(map(str,prefixSum)))
-    print()
-    #print("\n".join(map(str,prefixSumPerColor)))
+    # print()
+    # print("\n".join(map(str,prefixSum)))
+    # print()
+    # print(sizeArr)
+    # print()
+    # print(sizeArrPerColor)
+    # print(prefixSumPerColor)
     # print()
     print("\n".join(map(str,answer)))
     
