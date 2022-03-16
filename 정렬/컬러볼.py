@@ -2,9 +2,12 @@
 전체 정렬 후 누적합과
 각 색깔별 정렬 후 누적합을 계산해
 전체-색 을통해 누적합을 구함
+
+다른 색 같은 크기일때 이슈!!
 '''
 import sys
-input = sys.stdin.readline
+#input = sys.stdin.readline
+sys.stdin = open("input.txt", "r")
 
 def main():
     N = int(input())
@@ -37,14 +40,23 @@ def main():
     
     # 전체-색별
     answer = [0 for _ in range(N)]
-    for i in range(N-1):
+    for i in range(N):
         num, color, size = arr[i]
-        answer[num] += prefixSum[-1] - prefixSum[i+1]
-        for j in range(len(perColor[color])-1):
+        answer[num] += prefixSum[i] - size
+    for color in range(1,N+1): 
+        for j in range(len(perColor[color])):
             num, size = perColor[color][j]
-            answer[num] -= prefixSumPerColor[color][-1] - prefixSumPerColor[color][j+1]
-
-    print(answer)
+            answer[num] -= (prefixSumPerColor[color][j]-size)
+            #print(f"n:{num}, s:{size}, c:{color}, minus:{(prefixSumPerColor[color][j]-size)}")
+    
+    print("arr:\n" + "\n".join(map(str,arr)))
+    # print("perColor:\n" + "\n".join(map(str,perColor)))
+    print()
+    print("\n".join(map(str,prefixSum)))
+    print()
+    #print("\n".join(map(str,prefixSumPerColor)))
+    # print()
+    print("\n".join(map(str,answer)))
     
 main()
     
