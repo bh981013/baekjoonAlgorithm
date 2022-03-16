@@ -1,3 +1,7 @@
+'''
+재귀 활용한 풀이, N^3 시간복잡도 => 시간초과!
+'''
+
 import sys
 # input = sys.stdin.readline
 sys.stdin = open("input.txt", "r")
