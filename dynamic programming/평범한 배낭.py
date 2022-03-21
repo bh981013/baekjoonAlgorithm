@@ -7,17 +7,18 @@ arr = []
 def main():
     global cache,arr
     maxStuffNum, maxW = map(int, input().split())
-    cache = [[0]+[-1 for _ in range(maxW+1)] for _ in range(maxStuffNum+1)]
+    cache = [[0]+[-1 for _ in range(maxW)] for _ in range(maxStuffNum+1)]
     cache[0] = [0 for _ in range(maxW+1)]
     arr = [[]]
     for _ in range(maxStuffNum):
-        arr.append([0]+ list(map(int, input().split())))
+        arr.append(list(map(int, input().split())))
     print(dp(maxStuffNum, maxW))
+
 
 def dp(stuffNum, W):
     global cache,arr
-    if stuffNum < 0 or W<0:
-        return 0
+    if  W<0:
+        return -float("inf")
     elif cache[stuffNum][W] != -1:
         return cache[stuffNum][W]
     
