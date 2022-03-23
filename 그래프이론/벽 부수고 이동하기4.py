@@ -10,7 +10,7 @@ from collections import deque
 t = time.time()
 #input = sys.stdin.readline
 sys.stdin = open("input.txt", "r")
-#print = sys.stdout.write
+print = sys.stdout.write
 N, M = 0,0
 maxTime= 0
 maxSize = 0
@@ -30,6 +30,7 @@ adjWall = []
 blankSize = []
 visited = [[0 for _ in range(M)] for _ in range(N)]
 cur = 0
+
 while(cur < MAP_SIZE):
     h = cur // M
     w = cur % M
@@ -39,38 +40,38 @@ while(cur < MAP_SIZE):
         cur += 1
     else:   #방문하지 않은 빈칸 발견
         #print("this is blank")
-            bnum += 1
-            T = time.time()
-            stack = [[h,w]]
-            visited[h][w] = 1
-            sizeOfBlank = 1
-            # visitedWall = [[0 for _ in range(M)] for _ in range(N)]
-            #dfs 로 빈칸을 탐색하면서 벽을 만났을때, 빈칸을 만났을 때 다른 작업을 수행
-            numLoop = 0
-            while(stack):
-                #print(stack)
-                numLoop += 1
-                h,w = stack.pop()
-                #print("new:", h, w)
-                for dh, dw in zip([0, 1, 0 ,-1], [1,0,-1, 0]):
-                    nh,nw = h+dh, w+dw
-                    #print(nh, nw)
-                    if 0<=nh<N and 0<=nw<M:
-                        #벽을 만났으면 현재 탐색하고자 하는 빈칸에 인접한 벽이므로 해당 벽의 위치를 추가함
-                        # if arr[nh][nw] > 0 and not visitedWall[nh][nw]:
-                        #     #print("wall")
-                        #     walls.append([nh, nw])
-                        #     visitedWall[nh][nw] = 1
-                        #빈칸을 만났으면 스택에 추가함 
-                        if arr[nh][nw] == 0 and not visited[nh][nw]:  
-                        # print("blank")
-                            visited[nh][nw] = 1 
-                            stack.append([nh, nw])
-                            sizeOfBlank += 1
-            blankMap[h][w] = [sizeOfBlank, bnum]
-            # print()
-            cur += 1
-print(blankMap)
+        bnum += 1
+        T = time.time()
+        stack = [[h,w]]
+        visited[h][w] = 1
+        sizeOfBlank = 1
+        # visitedWall = [[0 for _ in range(M)] for _ in range(N)]
+        #dfs 로 빈칸을 탐색하면서 벽을 만났을때, 빈칸을 만났을 때 다른 작업을 수행
+        numLoop = 0
+        blankArr = [[h,w]]
+        while(stack):
+            #print(stack)
+            numLoop += 1
+            h,w = stack.pop()
+            #print("new:", h, w)
+            for dh, dw in zip([0, 1, 0 ,-1], [1,0,-1, 0]):
+                nh,nw = h+dh, w+dw
+                #print(nh, nw)
+                if 0<=nh<N and 0<=nw<M:
+                    #빈칸을 만났으면 스택에 추가함 
+                    if arr[nh][nw] == 0 and not visited[nh][nw]:  
+                    # print("blank")
+                        visited[nh][nw] = 1 
+                        stack.append([nh, nw])
+                        blankArr.append([nh, nw])
+                        #print(nh, nw)
+                        sizeOfBlank += 1
+        for i, j in blankArr:
+            blankMap[i][j] = [sizeOfBlank, bnum]
+        # print()
+        cur += 1
+
+#print("\n".join(map(str, blankMap)))
 
 for i in range(N):
     for j in range(M):
@@ -78,13 +79,13 @@ for i in range(N):
             done = []
             for dh, dw in zip([0, 1, 0 ,-1], [1,0,-1, 0]):
                 nh,nw = i+dh, j+dw
-                if 0<=nh<N and 0<=nw<M and blankMap[nh][nw] != -1 and  blankMap[nh][nw][1] not in done:
+                if 0<=nh<N and 0<=nw<M and blankMap[nh][nw] != -1 and  (blankMap[nh][nw][1] not in done):
                     arr[i][j] += blankMap[nh][nw][0]
                     done.append(blankMap[nh][nw][1])
 
-
 for i in range(N):
     print("".join(map(str,arr[i])))
+    print("\n")
 
 '''
 46003
