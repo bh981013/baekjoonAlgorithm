@@ -1,6 +1,5 @@
 
 
-from sys import setrecursionlimit
 
 import sys
 Money = []
